@@ -1,0 +1,42 @@
+name: wareed
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  supabase_flutter: ^2.0.0
+  easy_localization: ^3.0.0
+  google_fonts: ^6.1.0
+  shared_preferences: ^2.2.0
+  url_launcher: ^6.1.0
+  lottie: ^3.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  
+  # تم التصحيح: الآن هي على نفس مستوى flutter_test
+  flutter_launcher_icons: ^0.13.1
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/translations/
+    - assets/images/
+    - assets/animations/
+
+# إعدادات الأيقونة في النهاية
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo.png"
+  min_sdk_android: 21

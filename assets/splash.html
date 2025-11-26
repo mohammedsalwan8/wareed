@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>Wareed Animation - Fixed Arabic</title>
+    <!-- استيراد خط "عارف رقعة" -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Aref Ruqaa', serif;
+        }
+
+        .scene {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeOutAll 1s ease-in-out 6s forwards;
+        }
+
+        /* --- قطرة الدم --- */
+        .blood-drop-container {
+            position: relative;
+            width: 100px;
+            height: 140px;
+            opacity: 0;
+            transform: scale(0);
+            animation: formDrop 1s cubic-bezier(0.17, 0.67, 0.83, 0.67) 0.5s forwards;
+            z-index: 10;
+            margin-bottom: 10px;
+        }
+
+        .blood-drop {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 30%, #ff4d4d, #cc0000);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            border-top-left-radius: 50% 55%;
+            border-top-right-radius: 50% 55%;
+            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.2), 0 15px 25px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blood-drop::after {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 20%;
+            width: 20px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            transform: rotate(-20deg);
+            filter: blur(2px);
+        }
+
+        /* --- نبض القلب --- */
+        .ecg-line {
+            position: absolute;
+            top: 55%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ecg-svg {
+            width: 100%;
+            height: 40px;
+        }
+
+        .ecg-path {
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: pulseLine 1.2s ease-in-out 1.5s forwards;
+            filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));
+        }
+
+        /* --- حاوية النص العربي --- */
+        .text-container {
+            position: relative;
+            margin-top: 15px;
+            display: flex;
+            flex-direction: row; /* ترتيب طبيعي للعربي */
+            align-items: center;
+            justify-content: center;
+            direction: rtl; /* إجبار الاتجاه من اليمين لليسار */
+            gap: 2px; /* مسافة صغيرة جداً بين الحروف المنفصلة */
+            z-index: 20;
+        }
+
+        /* تنسيق الحروف */
+        .letter-group {
+            font-size: 90px;
+            color: #b30000;
+            opacity: 0;
+            /* بداية الحركة: الحرف منزاح للأسفل قليلاً */
+            transform: translateY(30px) translateX(-10px);
+            display: inline-block;
+            line-height: 1;
+            filter: blur(5px);
+        }
+
+        /* توقيت ظهور الحروف بالتتابع */
+        
+        /* 1. حرف الواو */
+        .group-1 { 
+            animation: revealText 0.8s cubic-bezier(0.2, 1, 0.3, 1) 2.4s forwards; 
+        }
+        
+        /* 2. حرف الراء */
+        .group-2 { 
+            animation: revealText 0.8s cubic-bezier(0.2, 1, 0.3, 1) 2.7s forwards; 
+        }
+        
+        /* 3. مقطع "يد" (متصل لضمان شكل الكتابة الصحيح) */
+        .group-3 { 
+            animation: revealText 0.8s cubic-bezier(0.2, 1, 0.3, 1) 3.0s forwards; 
+            margin-right: -5px; /* تقريب المسافة بين الراء والياء قليلاً */
+        }
+
+        /* --- النبضة النهائية --- */
+        .soft-pulse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, rgba(255, 50, 50, 0.3) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 5;
+            animation: expandPulse 1.5s ease-out 3.5s forwards;
+        }
+
+        /* --- Keyframes --- */
+
+        @keyframes formDrop {
+            0% { opacity: 0; transform: scale(0); }
+            70% { transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulseLine {
+            0% { stroke-dashoffset: 100; opacity: 1; }
+            50% { stroke-dashoffset: 0; opacity: 1; }
+            100% { stroke-dashoffset: -100; opacity: 0; }
+        }
+
+        @keyframes revealText {
+            0% { 
+                opacity: 0; 
+                transform: translateY(30px) scale(0.9); 
+                filter: blur(8px); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+                filter: blur(0); 
+            }
+        }
+
+        @keyframes expandPulse {
+            0% { width: 10px; height: 10px; opacity: 1; }
+            100% { width: 900px; height: 900px; opacity: 0; }
+        }
+
+        @keyframes fadeOutAll {
+            to { opacity: 0; transform: scale(1.05); }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="scene">
+    <!-- قطرة الدم -->
+    <div class="blood-drop-container">
+        <div class="blood-drop"></div>
+        <div class="ecg-line">
+            <svg class="ecg-svg" viewBox="0 0 100 40">
+                <path class="ecg-path" d="M0,20 L30,20 L40,5 L50,35 L60,20 L100,20" />
+            </svg>
+        </div>
+    </div>
+
+    <div class="soft-pulse"></div>
+
+    <!-- النص العربي الصحيح -->
+    <div class="text-container">
+        <!-- ترتيب العناصر هنا حسب ظهورها من اليمين لليسار -->
+        <span class="letter-group group-1">و</span>
+        <span class="letter-group group-2">ر</span>
+        <!-- دمجنا الياء والدال معاً ليظهرا متصلين بشكل صحيح -->
+        <span class="letter-group group-3">يد</span>
+    </div>
+</div>
+
+</body>
+</html>
